@@ -100,8 +100,8 @@ class MainMenuView(arcade.View):
         # self.Cube = arcade.Sprite("./Ressources/Cube.png",center_x=self.v_box.center_x + self.width/30, center_y=self.height/7)
         # self.About = arcade.Text("Une création de CubeLogique",self.v_box.center_x-self.v_box.width/2,self.height/7,font_size=20,bold=True)
         self.music = self.music = arcade.load_sound("./Ressources/credits.wav")
-        speed_list = [0.75,0.80,0.95,0.90]
-        self.music = arcade.play_sound(self.music,volume = 0.5,looping=True,speed=random.choice(speed_list))
+        speed_list = [0.75,0.80]
+        self.music = arcade.play_sound(self.music,volume = 0.2,looping=True,speed=random.choice(speed_list))
         self.logo = arcade.Sprite("./Ressources/logo.png",scale=0.40,center_x=self.v_box.center_x + self.width/4,center_y=self.v_box.center_y + self.height/1.4)
         
     def on_update(self, delta_time: float):
