@@ -1,2 +1,2 @@
 # OpenLab
- Game developed with Python Arcade.
+ Game developed with Python Arcade 2.7
