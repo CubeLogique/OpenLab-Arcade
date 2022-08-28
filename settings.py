@@ -23,10 +23,10 @@ class SettingsView(arcade.View):
         # self.v_box.add(settings_text.with_space_around(bottom=100))
         
         Language = arcade.gui.UILabel(text="Language",font_name="Joystix",font_size=20)
-        self.v_box.add(Language.with_padding(bottom=20))
+        self.v_box.add(Language)
         
         French_button = arcade.gui.UIFlatButton(text="Français", width=200)
-        self.v_box.add(French_button.with_padding(bottom=20))
+        self.v_box.add(French_button.with_padding(top=10,bottom=10))
         
         French_button.on_click = self.on_click_french
         
@@ -36,14 +36,15 @@ class SettingsView(arcade.View):
         English_button.on_click = self.on_click_english
     
         Keyboard = arcade.gui.UILabel(text=self.langlist[4],font_name="Joystix",font_size=20)
-        self.v_box.add(Keyboard.with_padding(bottom=20))
+        self.v_box.add(Keyboard)
         
                
         ui_text_label = arcade.gui.UITextArea(text=self.langlist[7],
                                               width=400,
                                               height=60,
                                               font_size=12)
-        self.v_box.add(ui_text_label)
+        
+        self.v_box.add(ui_text_label.with_padding(top=20))
         
         # self.manager.add(
         #     arcade.gui.UIAnchorWidget(
@@ -53,10 +54,10 @@ class SettingsView(arcade.View):
         #         align_y=-50,
         #         child=self.v_box))
         
-        ui_anchor_layout.add(child=self.v_box, anchor_x="center", anchor_y="center_y",align_x=100,align_y=-50)
+        ui_anchor_layout.add(child=self.v_box, anchor_x="right", anchor_y="center_y",align_x=-100,align_y=-150)
         self.manager.add(ui_anchor_layout)
         
-        self.logo = arcade.Sprite("./Ressources/logo.png",scale=0.40,center_x=self.v_box.center_x + self.width/6.6,center_y=self.v_box.center_y + self.height/3)
+        self.logo = arcade.Sprite("./Ressources/logo.png",scale=0.40,center_x=self.v_box.center_x + self.width/1.4,center_y=self.v_box.center_y + self.height/1.3)
         
     def on_click_french(self, event):
         text_file = open("language.txt", "w")
