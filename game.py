@@ -163,47 +163,6 @@ class BulletSprite(arcade.SpriteSolidColor):
         if self.center_y < -100:
             self.remove_from_sprite_lists()
 
-class GameView(arcade.View):
-    
-    def on_show_view(self):
-        
-        self.width, self.height = arcade.get_display_size()
-        arcade.set_viewport(0, self.width, 0, self.height)
-        SPRITE_SIZE = self.height / SCREEN_GRID_HEIGHT
-        
-        # Set background color
-        arcade.set_background_color(arcade.color.AMAZON)
-        
-        self.ground_list = None
-        self.tile_map = None
-        
-        # Name of map file to load
-        map_name = "./Ressources/map.tmx"
-
-        # Layer specific options are defined based on Layer names in a dictionary
-        # Doing this will make the SpriteList for the platforms layer
-        # use spatial hashing for detection.
-        layer_options = {
-            "Platforms": {
-                "use_spatial_hash": True,
-                
-            },
-            "Items": {
-                "use_spatial_hash": True,
-            },
-        }
-
-        # self.tile_map = arcade.load_tilemap(map_name, TILE_SCALING, layer_options)
-        self.tile_map = arcade.TileMap(map_file=map_name,scaling=TILE_SCALING,layer_options=layer_options)
-        self.game_map = arcade.Scene.from_tilemap(self.tile_map)
-        
-        if self.tile_map.background_color:
-            arcade.set_background_color(self.tile_map.background_color)
-
-    def on_draw(self):
-        self.clear()
-        self.game_map.draw()
-
 class GameplayView(arcade.View):
 
     def on_show_view(self):
@@ -329,7 +288,22 @@ class GameplayView(arcade.View):
         self.physics_engine.add_sprite_list(self.moving_sprites_list,
                                             body_type=arcade.PymunkPhysicsEngine.KINEMATIC)
         
-        self.camera = arcade.Camera(self.width, self.height)
+        self.camera = arcade.Camera(viewport_width=self.width, viewport_height=self.height)
+
+    def center_camera_to_player(self):
+        screen_center_x = self.player_sprite.center_x - (self.camera.viewport_width / 2)
+        screen_center_y = self.player_sprite.center_y - (
+            self.camera.viewport_height / 2
+        )
+
+        # # Don't let camera travel past 0
+        # if screen_center_x < 0:
+        #     screen_center_x = 0
+        # if screen_center_y < 0:
+        #     screen_center_y = 0
+        player_centered = screen_center_x, screen_center_y
+
+        self.camera.move_to(player_centered)
 
     def on_key_press(self, key, modifiers):
 
@@ -395,20 +369,6 @@ class GameplayView(arcade.View):
         force = (BULLET_MOVE_FORCE, 0)
         self.physics_engine.apply_force(bullet, force)
         
-    def center_camera_to_player(self):
-        screen_center_x = self.player_sprite.center_x - (self.camera.viewport_width / 2)
-        screen_center_y = self.player_sprite.center_y - (
-            self.camera.viewport_height / 2
-        )
-
-        # # Don't let camera travel past 0
-        # if screen_center_x < 0:
-        #     screen_center_x = 0
-        # if screen_center_y < 0:
-        #     screen_center_y = 0
-        player_centered = screen_center_x, screen_center_y
-
-        self.camera.move_to(player_centered)
 
     def on_update(self, delta_time):
         
