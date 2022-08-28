@@ -6,6 +6,7 @@ class SettingsView(arcade.View):
     def on_show_view(self):
         
         self.width, self.height = arcade.get_display_size()
+        print("Screen Size is",self.width,self.height)
         # arcade.set_viewport(0, self.width, 0, self.height)
         
         arcade.load_font("./Ressources/joystix.ttf")
@@ -35,7 +36,7 @@ class SettingsView(arcade.View):
         English_button.on_click = self.on_click_english
     
         Keyboard = arcade.gui.UILabel(text=self.langlist[4],font_name="Joystix",font_size=20)
-        self.v_box.add(Keyboard.with_padding(bottom=20,top=30))
+        self.v_box.add(Keyboard.with_padding(bottom=20))
         
                
         ui_text_label = arcade.gui.UITextArea(text=self.langlist[7],
