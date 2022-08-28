@@ -289,6 +289,7 @@ class GameplayView(arcade.View):
                                             body_type=arcade.PymunkPhysicsEngine.KINEMATIC)
         
         self.camera = arcade.Camera(viewport_width=self.width, viewport_height=self.height)
+        self.camera.use()
 
     def center_camera_to_player(self):
         screen_center_x = self.player_sprite.center_x - (self.camera.viewport_width / 2)
@@ -445,7 +446,6 @@ class GameplayView(arcade.View):
 
     def on_draw(self):
         self.clear()
-        self.camera.use()
         self.wall_list.draw()
         self.ladder_list.draw()
         self.moving_sprites_list.draw()
