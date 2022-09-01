@@ -174,6 +174,7 @@ class GameplayView(arcade.View):
         
         self.camera = arcade.Camera(viewport_width=self.width, viewport_height=self.height)
         self.camera.use()
+        self.camera.rotation = 180
 
     def on_show_view(self):
         
@@ -450,6 +451,7 @@ class GameplayView(arcade.View):
 
     def on_draw(self):
         self.clear()
+        self.camera.use()
         self.wall_list.draw()
         self.ladder_list.draw()
         self.moving_sprites_list.draw()
