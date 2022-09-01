@@ -167,7 +167,7 @@ class GameplayView(arcade.View):
     
     def __init__(self):
         
-        GameplayView.__init__(self)
+        super().__init__()
         
         self.width, self.height = arcade.get_display_size()
         arcade.set_viewport(0, self.width, 0, self.height)
