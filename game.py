@@ -270,7 +270,7 @@ class GameplayView(arcade.View):
         self.physics_engine.add_sprite(self.player_sprite,
                                        friction=PLAYER_FRICTION,
                                        mass=PLAYER_MASS,
-                                       moment=arcade.PymunkPhysicsEngine.MOMENT_INF,
+                                       moment_of_inertia=arcade.PymunkPhysicsEngine.MOMENT_INF,
                                        collision_type="player",
                                        max_horizontal_velocity=PLAYER_MAX_HORIZONTAL_SPEED,
                                        max_vertical_velocity=PLAYER_MAX_VERTICAL_SPEED)
