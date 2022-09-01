@@ -32,8 +32,8 @@ class MainMenuView(arcade.View):
         
         self.frame_earth = 0
         self.frame_moon = 0
-        self.earth_frames = [arcade.load_texture(f"./Ressources/earth_sprites/earth-{i}.png") for i in range(100)]
-        self.moon_frames = [arcade.load_texture(f"./Ressources/moon_sprites/moon-{i}.png") for i in range(120)]
+        self.earth_frames = [arcade.load_texture(f"./Ressources/earth_sprites/earth-{i}.png", hit_box_algorithm=None) for i in range(100)]
+        self.moon_frames = [arcade.load_texture(f"./Ressources/moon_sprites/moon-{i}.png", hit_box_algorithm=None) for i in range(120)]
         
         from translator import language
         self.langlist = language.read()
