@@ -164,11 +164,19 @@ class BulletSprite(arcade.SpriteSolidColor):
             self.remove_from_sprite_lists()
 
 class GameplayView(arcade.View):
-
-    def on_show_view(self):
+    
+    def __init__(self):
+        
+        GameplayView.__init__(self)
         
         self.width, self.height = arcade.get_display_size()
         arcade.set_viewport(0, self.width, 0, self.height)
+        
+        self.camera = arcade.Camera(viewport_width=self.width, viewport_height=self.height)
+        self.camera.use()
+
+    def on_show_view(self):
+        
         SPRITE_SIZE = self.height / SCREEN_GRID_HEIGHT
 
         # Player sprite
@@ -287,9 +295,6 @@ class GameplayView(arcade.View):
         # Add kinematic sprites
         self.physics_engine.add_sprite_list(self.moving_sprites_list,
                                             body_type=arcade.PymunkPhysicsEngine.KINEMATIC)
-        
-        self.camera = arcade.Camera(viewport_width=self.width, viewport_height=self.height)
-        self.camera.use()
 
     def center_camera_to_player(self):
         screen_center_x = self.player_sprite.center_x - (self.camera.viewport_width / 2)

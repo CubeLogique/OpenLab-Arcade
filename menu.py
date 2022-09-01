@@ -92,9 +92,9 @@ class MainMenuView(arcade.View):
         QUARTER_WIDTH = self.width // 4
         HALF_HEIGHT = self.height // 2
 
-        self.moon = RotatingSprite(texture=self.moon_frames[0], scale=0.20, center_x=2 * QUARTER_WIDTH + 50, center_y=HALF_HEIGHT)
+        self.moon = RotatingSprite(texture=self.moon_frames[0], scale=1, center_x=2 * QUARTER_WIDTH + 50, center_y=HALF_HEIGHT)
 
-        self.earth = arcade.Sprite(texture=self.earth_frames[0], scale=1.7, center_x=self.width, center_y=0)
+        self.earth = arcade.Sprite(texture=self.earth_frames[0], scale=2.5, center_x=self.width, center_y=0)
         
         self.sprites.extend([self.earth, self.moon])
         # self.Cube = arcade.Sprite("./Ressources/Cube.png",center_x=self.v_box.center_x + self.width/30, center_y=self.height/7)
@@ -102,7 +102,7 @@ class MainMenuView(arcade.View):
         self.music = self.music = arcade.load_sound("./Ressources/credits.wav")
         speed_list = [0.75,0.80]
         self.music = arcade.play_sound(self.music,volume = 0.2,looping=True,speed=random.choice(speed_list))
-        self.logo = arcade.Sprite("./Ressources/logo.png",scale=0.40,center_x=self.v_box.center_x + self.width/4,center_y=self.v_box.center_y + self.height/1.4)
+        self.logo = arcade.Sprite("./Ressources/logo.png",scale=0.40,center_x=self.v_box.center_x + self.width/3.5,center_y=self.v_box.center_y + self.height/1.4)
         
     def on_update(self, delta_time: float):
         self.moon.rotate_around_point(self.earth.position, 60 * delta_time, False)
