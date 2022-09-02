@@ -22,7 +22,7 @@ class SettingsView(arcade.View):
         # settings_text = arcade.gui.UILabel(text="Paramètres",font_size=20,font_name="Arial")
         # self.v_box.add(settings_text.with_space_around(bottom=100))
         
-        Language = arcade.gui.UILabel(text="Language",font_name="Joystix",font_size=20)
+        Language = arcade.gui.UILabel(text="Language",font_name='Joystix Monospace',font_size=20)
         self.v_box.add(Language)
         
         French_button = arcade.gui.UIFlatButton(text="Français", width=200)
@@ -35,7 +35,7 @@ class SettingsView(arcade.View):
         
         English_button.on_click = self.on_click_english
     
-        Keyboard = arcade.gui.UILabel(text=self.langlist[4],font_name="Joystix",font_size=20)
+        Keyboard = arcade.gui.UILabel(text=self.langlist[4],font_name='Joystix Monospace',font_size=20)
         self.v_box.add(Keyboard)
         
                
@@ -90,6 +90,6 @@ class SettingsView(arcade.View):
         arcade.draw_lrwh_rectangle_textured(0, 0,
                                             self.width, self.height,
                                             arcade.load_texture("./Ressources/background.png"))
-        arcade.draw_text(self.langlist[1], start_x=self.logo.center_x, start_y=self.logo.center_y-self.height/6.5, color=arcade.color.WHITE, font_size=30, anchor_x="left",font_name="Joystix")
+        arcade.draw_text(self.langlist[1], start_x=self.logo.center_x, start_y=self.logo.center_y-self.height/6.2, color=arcade.color.WHITE, font_size=30, anchor_x="left",font_name='Joystix Monospace')
         self.logo.draw()
         self.manager.draw()

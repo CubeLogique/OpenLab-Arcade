@@ -11,7 +11,8 @@ class LaunchView(arcade.View):
     def on_draw(self):
         self.clear()
         arcade.set_background_color(arcade.color.BLACK)
-        arcade.draw_text("Made by CubeLogique", self.window.width / 2, self.window.height / 2, arcade.color.WHITE, font_size=40, anchor_x="center", font_name='Joystix')
+        arcade.load_font("./Ressources/joystix.ttf")
+        arcade.draw_text("Made by CubeLogique", self.window.width / 2, self.window.height / 2, arcade.color.WHITE, font_size=40, anchor_x="center", font_name='Joystix Monospace')
         
     def on_update(self, delta_time: float):
         self.total_time += delta_time
