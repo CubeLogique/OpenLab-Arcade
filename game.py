@@ -174,7 +174,7 @@ class GameplayView(arcade.View):
         
         self.camera = arcade.Camera(viewport_width=self.width, viewport_height=self.height)
         self.camera.use()
-        self.camera.rotation = 180
+        self.camera.rotation = 270
 
     def on_show_view(self):
         
