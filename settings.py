@@ -90,6 +90,6 @@ class SettingsView(arcade.View):
         arcade.draw_lrwh_rectangle_textured(0, 0,
                                             self.width, self.height,
                                             arcade.load_texture("./Ressources/background.png"))
-        arcade.draw_text(self.langlist[1], start_x=self.logo.center_x, start_y=self.logo.center_y-self.height/6.2, color=arcade.color.WHITE, font_size=30, anchor_x="left",font_name='Joystix Monospace')
+        arcade.draw_text(self.langlist[1], start_x=self.logo.center_x, start_y=self.logo.center_y-self.height/6.3, color=arcade.color.WHITE, font_size=30, anchor_x="left",font_name='Joystix Monospace')
         self.logo.draw()
         self.manager.draw()
