@@ -8,9 +8,9 @@ SCREEN_TITLE = "OpenLab"
 
 # Fonction Principale
 def main():
-    from menu import MainMenuView
+    from launch import LaunchView
     window = arcade.Window(title=SCREEN_TITLE, fullscreen=True)
-    start_view = MainMenuView()
+    start_view = LaunchView()
     window.show_view(start_view)
     run(1/120)
 
