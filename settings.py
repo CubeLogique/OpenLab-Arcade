@@ -1,6 +1,7 @@
 import arcade
 import arcade.gui
 
+
 class SettingsView(arcade.View):
     
     def on_show_view(self):
@@ -11,8 +12,7 @@ class SettingsView(arcade.View):
         
         arcade.load_font("./Ressources/joystix.ttf")
         
-        from translator import language
-        self.langlist = language.read()
+        from config import read_saved_language, read_language
         
         self.manager = arcade.gui.UIManager()
         self.manager.enable()
@@ -35,11 +35,11 @@ class SettingsView(arcade.View):
         
         English_button.on_click = self.on_click_english
     
-        Keyboard = arcade.gui.UILabel(text=self.langlist[4],font_name='Joystix Monospace',font_size=20)
+        Keyboard = arcade.gui.UILabel(text=read_language(read_saved_language(),4),font_name='Joystix Monospace',font_size=20)
         self.v_box.add(Keyboard)
         
                
-        ui_text_label = arcade.gui.UITextArea(text=self.langlist[7],
+        ui_text_label = arcade.gui.UITextArea(text=read_language(read_saved_language(),7),
                                               width=400,
                                               height=60,
                                               font_size=12)
@@ -60,22 +60,15 @@ class SettingsView(arcade.View):
         self.logo = arcade.Sprite("./Ressources/logo.png",scale=0.40,center_x=self.v_box.center_x + self.width/1.4,center_y=self.v_box.center_y + self.height/1.3)
         
     def on_click_french(self, event):
-        text_file = open("language.txt", "w")
-        text_file.write('Français')
-        text_file.close()
-        with open("language.txt") as reader:
-            Language_Selected = reader.read()
+        from config import save_language
+        save_language("fr")
         from menu import MainMenuView
         view = MainMenuView()
         self.window.show_view(view)
         
     def on_click_english(self, event):
-        text_file = open("language.txt", "w")
-        text_file.write('English')
-        text_file.close()
-        with open("language.txt") as reader:
-            Language_Selected = reader.read()
-            reader.close()
+        from config import save_language
+        save_language("en")
         from menu import MainMenuView
         view = MainMenuView()
         self.window.show_view(view)
@@ -90,6 +83,9 @@ class SettingsView(arcade.View):
         arcade.draw_lrwh_rectangle_textured(0, 0,
                                             self.width, self.height,
                                             arcade.load_texture("./Ressources/background.png"))
-        arcade.draw_text(self.langlist[1], start_x=self.logo.center_x, start_y=self.logo.center_y-self.height/6.2, color=arcade.color.WHITE, font_size=30, anchor_x="left",font_name='Joystix Monospace')
+        
+        from config import read_saved_language, read_language
+        
+        arcade.draw_text(text=read_language(read_saved_language(),1), start_x=self.logo.center_x, start_y=self.logo.center_y-self.height/6.2, color=arcade.color.WHITE, font_size=30, anchor_x="left",font_name='Joystix Monospace')
         self.logo.draw()
         self.manager.draw()

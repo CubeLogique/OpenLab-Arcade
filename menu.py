@@ -35,8 +35,7 @@ class MainMenuView(arcade.View):
         self.earth_frames = [arcade.load_texture(f"./Ressources/earth_sprites/earth-{i}.png", hit_box_algorithm=None) for i in range(100)]
         self.moon_frames = [arcade.load_texture(f"./Ressources/moon_sprites/moon-{i}.png", hit_box_algorithm=None) for i in range(120)]
         
-        from translator import language
-        self.langlist = language.read()
+        from config import read_saved_language, read_language
         
         arcade.load_font("./Ressources/joystix.ttf")
         
@@ -47,18 +46,19 @@ class MainMenuView(arcade.View):
         self.v_box = arcade.gui.UIBoxLayout()
         
         # Création du Bouton Start
-        start_button = arcade.gui.UIFlatButton(text=self.langlist[0], width=200)
+        print(read_language(read_saved_language(),1))
+        start_button = arcade.gui.UIFlatButton(text=read_language(read_saved_language(),0), width=200)
         self.v_box.add(start_button.with_padding(bottom=20))
         
         # Fonction du Bouton Start
         start_button.on_click = self.on_click_start
         
-        settings_button = arcade.gui.UIFlatButton(text=self.langlist[1], width=200)
+        settings_button = arcade.gui.UIFlatButton(text=read_language(read_saved_language(),1), width=200)
         self.v_box.add(settings_button.with_padding(bottom=20))
         
         settings_button.on_click = self.on_click_settings
         
-        exit_button = start_button = arcade.gui.UIFlatButton(text=self.langlist[3], width=200)
+        exit_button = start_button = arcade.gui.UIFlatButton(text=read_language(read_saved_language(),3), width=200)
         self.v_box.add(exit_button.with_padding(bottom=20))
         
         exit_button.on_click = self.on_click_exit

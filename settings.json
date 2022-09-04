@@ -1,6 +1,6 @@
 {
     "Languages": {
-        "French": [
+        "fr": [
             "D\u00e9marrer",
             "Param\u00e8tres",
             "Cr\u00e9dits",
@@ -10,7 +10,7 @@
             "Appuyez sur une touche pour aller \u00e0 droite",
             "Sauter avec Touche C\nSe d\u00e9placer avec Fl\u00e8ches\nChanger de Gravit\u00e9 avec X et Direction de la Fl\u00e8che"
         ],
-        "English": [
+        "en": [
             "Start",
             "Settings",
             "About",
@@ -21,5 +21,5 @@
             "Jump with C Key\nMove with Arrows\nChange Gravity with X and Arrow Direction"
         ]
     },
-    "ChoosenLanguage": "English"
+    "ChoosenLanguage": "fr"
 }
