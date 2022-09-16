@@ -23,12 +23,12 @@ def read_language(language,number):
         return en[number]
 
 def save_language(language):
-    with open('settings.json', 'r+') as f:
-        data = json.load(f)
+    with open('settings.json', 'r+') as file:
+        data = json.load(file)
         if language == "fr":
             data["ChoosenLanguage"] = "fr"
         if language == "en":
             data["ChoosenLanguage"] = "en"
-        f.seek(0)
-        json.dump(data, f, indent=4)
-        f.truncate()
+        file.seek(0)
+        json.dump(data, file, indent=4)
+        file.truncate()
