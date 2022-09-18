@@ -174,7 +174,6 @@ class GameplayView(arcade.View):
         
         self.camera = arcade.Camera(viewport_width=self.width, viewport_height=self.height)
         self.camera.use()
-        self.camera.rotation = 270
 
     def on_show_view(self):
         
@@ -241,11 +240,11 @@ class GameplayView(arcade.View):
         damping = DEFAULT_DAMPING
 
         # Set the gravity. (0, 0) is good for outer space and top-down.
-        gravity = (0, -GRAVITY)
+        self.gravity = (0, -GRAVITY)
 
         # Create the physics engine
         self.physics_engine = arcade.PymunkPhysicsEngine(damping=damping,
-                                                         gravity=gravity)
+                                                         gravity=self.gravity)
 
         def wall_hit_handler(bullet_sprite, _wall_sprite, _arbiter, _space, _data):
             bullet_sprite.remove_from_sprite_lists()
@@ -374,7 +373,24 @@ class GameplayView(arcade.View):
         # Add force to bullet
         force = (BULLET_MOVE_FORCE, 0)
         self.physics_engine.apply_force(bullet, force)
-        
+    
+    
+    def gravity_switch(self,orientation):
+        if orientation == "up":
+            self.camera.rotation = 180
+            self.player_sprite.angle = 180
+            self.gravity = (0,GRAVITY)
+        elif orientation == "left":
+            self.camera.rotation = 90
+            self.player_sprite.angle = 90
+            self.gravity = (-GRAVITY,0)
+        elif orientation == "right":
+            self.camera.rotation = 270
+            self.player_sprite.angle = 270
+            self.gravity = (GRAVITY,0)
+        else:
+            self.camera.rotation = 0
+            self.player_sprite.angle = 0
 
     def on_update(self, delta_time):
         
@@ -446,8 +462,7 @@ class GameplayView(arcade.View):
             # Pymunk uses velocity is in pixels per second. If we instead have
             # pixels per frame, we need to convert.
             velocity = (moving_sprite.change_x * 1 / delta_time, moving_sprite.change_y * 1 / delta_time)
-            self.physics_engine.set_velocity(moving_sprite, velocity)
-
+            self.physics_engine.set_velocity(moving_sprite, velocity)    
 
     def on_draw(self):
         self.clear()
