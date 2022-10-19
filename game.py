@@ -26,6 +26,7 @@ UPDATES_PER_FRAME = 5
 SPRITE_SCALING = 0.5
 VIEWPORT_MARGIN = 40
 MOVEMENT_SPEED = 5
+IMAGE_ROTATION = 90
 
 SPRITE_IMAGE_SIZE = 128
 SPRITE_SCALING_PLAYER = 0.5
@@ -157,11 +158,101 @@ class PlayerSprite(arcade.Sprite):
                 self.cur_texture = 0
             self.texture = self.walk_textures[self.cur_texture][self.character_face_direction]
             
-class BulletSprite(arcade.SpriteSolidColor):
-    def pymunk_moved(self, physics_engine, dx, dy, d_angle):
-        # If the bullet falls below the screen, remove it
-        if self.center_y < -100:
-            self.remove_from_sprite_lists()
+# class BulletSprite(arcade.SpriteSolidColor):
+#     def pymunk_moved(self, physics_engine, dx, dy, d_angle):
+#         # If the bullet falls below the screen, remove it
+#         if self.center_y < -100:
+#             self.remove_from_sprite_lists()
+
+class GravityBall(arcade.Sprite):
+    def __init__(self):
+        super().__init__(":resources:images/topdown_tanks/tank_green.png")
+
+        self._destination_point = None
+        self.speed = 10
+        self.rot_speed = 5
+
+    @property
+    def destination_point(self):
+        return self._destination_point
+
+    @destination_point.setter
+    def destination_point(self, destination_point):
+        self._destination_point = destination_point
+
+    def on_update(self, delta_time: float = 1 / 60):
+        
+        if not self._destination_point:
+            self.change_x = 0
+            self.change_y = 0
+            return
+
+        start_x = self.center_x
+        start_y = self.center_y
+
+        dest_x = self._destination_point[0]
+        dest_y = self._destination_point[1]
+
+        x_diff = dest_x - start_x
+        y_diff = dest_y - start_y
+        target_angle_radians = math.atan2(y_diff, x_diff)
+        if target_angle_radians < 0:
+            target_angle_radians += 2 * math.pi
+
+        actual_angle_radians = math.radians(self.angle - IMAGE_ROTATION)
+        rot_speed_radians = math.radians(self.rot_speed)
+        angle_diff_radians = target_angle_radians - actual_angle_radians
+
+        if abs(angle_diff_radians) <= rot_speed_radians:
+            actual_angle_radians = target_angle_radians
+            clockwise = None
+        elif angle_diff_radians > 0 and abs(angle_diff_radians) < math.pi:
+            clockwise = False
+        elif angle_diff_radians > 0 and abs(angle_diff_radians) >= math.pi:
+            clockwise = True
+        elif angle_diff_radians < 0 and abs(angle_diff_radians) < math.pi:
+            clockwise = True
+        else:
+            clockwise = False
+
+        # Rotate the proper direction if needed
+        if actual_angle_radians != target_angle_radians and clockwise:
+            actual_angle_radians -= rot_speed_radians
+        elif actual_angle_radians != target_angle_radians:
+            actual_angle_radians += rot_speed_radians
+
+        # Keep in a range of 0 to 2pi
+        if actual_angle_radians > 2 * math.pi:
+            actual_angle_radians -= 2 * math.pi
+        elif actual_angle_radians < 0:
+            actual_angle_radians += 2 * math.pi
+
+        # Convert back to degrees
+        self.angle = math.degrees(actual_angle_radians) + IMAGE_ROTATION
+
+        # Are we close to the correct angle? If so, move forward.
+        if abs(angle_diff_radians) < math.pi / 4:
+            self.change_x = math.cos(actual_angle_radians) * self.speed
+            self.change_y = math.sin(actual_angle_radians) * self.speed
+
+        # Fine-tune our change_x/change_y if we are really close to destination
+        # point and just need to set to that location.
+        traveling = False
+        if abs(self.center_x - dest_x) < abs(self.change_x):
+            self.center_x = dest_x
+        else:
+            self.center_x += self.change_x
+            traveling = True
+
+        if abs(self.center_y - dest_y) < abs(self.change_y):
+            self.center_y = dest_y
+        else:
+            self.center_y += self.change_y
+            traveling = True
+
+        # If we have arrived, then cancel our destination point
+        if not traveling:
+            self._destination_point = None
 
 class GameplayView(arcade.View):
     
@@ -204,7 +295,7 @@ class GameplayView(arcade.View):
 
         # Create the sprite lists
         self.player_list = arcade.SpriteList()
-        self.bullet_list = arcade.SpriteList()
+        # self.bullet_list = arcade.SpriteList()
 
         # Map name
         map_name = ":resources:/tiled_maps/pymunk_test_map.json"
@@ -245,6 +336,8 @@ class GameplayView(arcade.View):
         # Create the physics engine
         self.physics_engine = arcade.PymunkPhysicsEngine(damping=damping,
                                                          gravity=self.gravity)
+        
+        
 
         def wall_hit_handler(bullet_sprite, _wall_sprite, _arbiter, _space, _data):
             bullet_sprite.remove_from_sprite_lists()
@@ -316,7 +409,7 @@ class GameplayView(arcade.View):
             self.left_pressed = True
         elif key == arcade.key.RIGHT:
             self.right_pressed = True
-        elif key == arcade.key.C:
+        elif key == arcade.key.UP:
             self.up_pressed = True
             if self.physics_engine.is_on_ground(self.player_sprite) \
                     and not self.player_sprite.is_on_ladder:
@@ -331,48 +424,51 @@ class GameplayView(arcade.View):
             self.left_pressed = False
         elif key == arcade.key.RIGHT:
             self.right_pressed = False
-        elif key == arcade.key.C:
+        elif key == arcade.key.UP:
             self.up_pressed = False
         elif key == arcade.key.DOWN:
             self.down_pressed = False
 
     def on_mouse_press(self, x, y, button, modifiers):
 
-        bullet = BulletSprite(20, 5, arcade.color.DARK_YELLOW)
-        self.bullet_list.append(bullet)
+        # bullet = BulletSprite(20, 5, arcade.color.DARK_YELLOW)
+        # self.bullet_list.append(bullet)
 
-        start_x = self.player_sprite.center_x
-        start_y = self.player_sprite.center_y
-        bullet.position = self.player_sprite.position
+        # start_x = self.player_sprite.center_x
+        # start_y = self.player_sprite.center_y
+        # bullet.position = self.player_sprite.position
         
-        dest_x = x
-        dest_y = y
+        # dest_x = x
+        # dest_y = y
 
-        x_diff = dest_x - start_x
-        y_diff = dest_y - start_y
-        angle = math.atan2(y_diff, x_diff)
+        # x_diff = dest_x - start_x
+        # y_diff = dest_y - start_y
+        # angle = math.atan2(y_diff, x_diff)
 
-        size = max(self.player_sprite.width, self.player_sprite.height) / 2
+        # size = max(self.player_sprite.width, self.player_sprite.height) / 2
 
-        bullet.center_x += size * math.cos(angle)
-        bullet.center_y += size * math.sin(angle)
+        # bullet.center_x += size * math.cos(angle)
+        # bullet.center_y += size * math.sin(angle)
 
-        bullet.angle = math.degrees(angle)
+        # bullet.angle = math.degrees(angle)
         
-        bullet_gravity = (0, -BULLET_GRAVITY)
+        # bullet_gravity = (0, -BULLET_GRAVITY)
 
-        # Add the sprite. This needs to be done AFTER setting the fields above.
-        self.physics_engine.add_sprite(bullet,
-                                       mass=BULLET_MASS,
-                                       damping=1.0,
-                                       friction=0.6,
-                                       collision_type="bullet",
-                                       gravity=bullet_gravity,
-                                       elasticity=0.9)
+        # # Add the sprite. This needs to be done AFTER setting the fields above.
+        # self.physics_engine.add_sprite(bullet,
+        #                                mass=BULLET_MASS,
+        #                                damping=1.0,
+        #                                friction=0.6,
+        #                                collision_type="bullet",
+        #                                gravity=bullet_gravity,
+        #                                elasticity=0.9)
 
-        # Add force to bullet
-        force = (BULLET_MOVE_FORCE, 0)
-        self.physics_engine.apply_force(bullet, force)
+        # # Add force to bullet
+        # force = (BULLET_MOVE_FORCE, 0)
+        # self.physics_engine.apply_force(bullet, force)
+        
+        if button == arcade.MOUSE_BUTTON_RIGHT:
+            self.ball.destination_point = x, y
     
     
     def gravity_switch(self,orientation):
@@ -395,6 +491,13 @@ class GameplayView(arcade.View):
     def on_update(self, delta_time):
         
         self.center_camera_to_player()
+        
+        self.ball = GravityBall()
+        self.ball.center_x = self.player_sprite.center_x
+        self.ball.center_y = self.player_sprite.center_y
+        self.player_list.append(self.ball)
+        
+        self.player_list.on_update(delta_time) 
         
         is_on_ground = self.physics_engine.is_on_ground(self.player_sprite)
         # Update player forces based on keys pressed
@@ -462,7 +565,7 @@ class GameplayView(arcade.View):
             # Pymunk uses velocity is in pixels per second. If we instead have
             # pixels per frame, we need to convert.
             velocity = (moving_sprite.change_x * 1 / delta_time, moving_sprite.change_y * 1 / delta_time)
-            self.physics_engine.set_velocity(moving_sprite, velocity)    
+            self.physics_engine.set_velocity(moving_sprite, velocity)   
 
     def on_draw(self):
         self.clear()
@@ -470,6 +573,6 @@ class GameplayView(arcade.View):
         self.wall_list.draw()
         self.ladder_list.draw()
         self.moving_sprites_list.draw()
-        self.bullet_list.draw()
+        # self.bullet_list.draw()
         self.item_list.draw()
         self.player_list.draw()
