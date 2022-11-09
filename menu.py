@@ -106,7 +106,7 @@ class MainMenuView(arcade.View):
         self.logo.draw()
        
     def on_click_start(self, event):
-        from game import GameplayView
+        from Ressources.old.game import GameplayView
         game_view = GameplayView()
         arcade.stop_sound(self.music)
         self.window.show_view(game_view)
