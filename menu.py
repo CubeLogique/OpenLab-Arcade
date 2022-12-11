@@ -4,7 +4,6 @@ import os
 import random
 
 class RotatingSprite(arcade.Sprite):
-
     def rotate_around_point(self, point, degrees, change_angle=True):
 
         if change_angle:
